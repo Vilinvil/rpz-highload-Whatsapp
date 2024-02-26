@@ -115,14 +115,14 @@ Daily active users(DAU) я взял с учетом сайтов [2] и [3]
 
 Объем хранилища: (4768 + 1335 + 22) Тбайт в день * 0.6 = 3675 Тбайт в день.
 
-| Метрика                       |     Значение      |
-|-------------------------------|:-----------------:|
-| Трафик текстовых сообщений    |   22 Тбайт\день   |
-| Трафик голосовых сообщений    |  1335 Тбайт\день  |
-| Трафик сообщений с вложениями |  4768 Тбайт\день  |
-| Трафик голосовых звонков      |  137 Тбайт\день   |
-| Суммарный трафик              | 137 Тбайт\день    |
-| Объем хранилища в день        |  3675 Тбайт\день  |
+| Метрика                       |     Значение     |
+|-------------------------------|:----------------:|
+| Трафик текстовых сообщений    |  22 Тбайт\день   |
+| Трафик голосовых сообщений    | 1335 Тбайт\день  |
+| Трафик сообщений с вложениями | 4768 Тбайт\день  |
+| Трафик голосовых звонков      |  137 Тбайт\день  |
+| Суммарный трафик              | 6262  Тбайт\день |
+| Объем хранилища в день        | 3675 Тбайт\день  |
 
 
 ### Рассчитаем RPS
@@ -155,8 +155,7 @@ Daily active users(DAU) я взял с учетом сайтов [2] и [3]
 2. Частота использования ежедневно в США https://www.statista.com/statistics/814813/frequency-with-which-us-internet-users-visit-whatsapp/
 3. Количество ежедневных пользователей https://www.statista.com/statistics/730306/whatsapp-status-dau/
 4. Распределение MAU по странам https://worldpopulationreview.com/country-rankings/whatsapp-users-by-country
-5. Исследование 4 млн сообщений от 100 людей
-https://www.researchgate.net/publication/299487660_WhatsApp_Usage_Patterns_and_Prediction_Models
+5. Исследование 4 млн сообщений от 100 людей 2016г https://www.researchgate.net/publication/299487660_WhatsApp_Usage_Patterns_and_Prediction_Models
 6. Расчеты MAU по условным регионам https://docs.google.com/spreadsheets/d/1bwwJy5Y3Objel3J5x4IXkPFhqaDwpeiLdYi_NVZZPw0/edit?usp=sharing
 7. Исследование английских слов https://norvig.com/mayzner.html
 8. Официальный пост Whatsapp о количестве голосовых сообщений https://blog.whatsapp.com/making-voice-messages-better
