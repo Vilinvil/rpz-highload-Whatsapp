@@ -323,6 +323,8 @@ session, т.к. с большей вероятностью клиент попа
 ## Логическая схема базы данных
 https://dbdesigner.page.link/iYHpj1svBPE29XoV8
 
+![logic_schema](logic_schema.png)
+
 ## Список литературы
 
 1. Общая статистика Whatsapp https://www.bankmycell.com/blog/number-of-whatsapp-users/#1613581803631-96bfa-c1678a7f-e18553c4-2e8a2161-0689e002-e6d075e8-7b5a
