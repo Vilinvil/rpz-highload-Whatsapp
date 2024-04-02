@@ -340,6 +340,31 @@ session, т.к. с большей вероятностью клиент попа
 
 **SqlLite** используем для хранения на клиентах ввиду специфики отсутствия постоянного хранения.
 
+| Таблица      | База данных |           Primary Key           |           Index            |
+|--------------|:-----------:|:-------------------------------:|:--------------------------:|
+| session      |    Redis    |              token              |             -              |
+| message      |  Cassandra  | K(chat_id, month_year). C↓ (id) |             -              |
+| reaction     |  Cassandra  | K(chat_id, month_year). C↓ (id) |             -              |
+| view         |  Cassandra  |    K(message_id, month_year)    |             -              |
+| call_history |  Cassandra  |        K(chat_id, year)         |             -              |
+| user         |  Cassandra  |              K(id)              |        SAI (phone)         |
+| chat         |  Cassandra  |              K(id)              |             -              |
+| folder       |  Cassandra  |              K(id)              |             -              |
+| video_binary |  Amazon S3  |               url               |             -              |
+| photo_binary |  Amazon S3  |               url               |             -              |
+| files_binary |  Amazon S3  |               url               |             -              |
+| voice_binary |  Amazon S3  |               url               |             -              |
+| message      |   SQLite    |               id                | BI(chat_id, id), PI(value) |
+| call_history |   SQLite    |               id                |          BI (id)           |
+| user         |   SQLite    |               id                |             -              |
+| chat         |   SQLite    |               id                |             -              |
+| folder       |   SQLite    |               id                |             -              |
+| video_binary |   SQLite    |               url               |          BI(url)           |
+| photo_binary |   SQLite    |               url               |          BI(url)           |
+| files_binary |   SQLite    |               url               |          BI(url)           |
+| voice_binary |   SQLite    |               url               |          BI(url)           |
+
+
 ### Бекенд
 
 В Cassandra есть ключи шардирования или партиционирования (partition key обознач. K) и ключи кластеризации (clustering key обознач. C).
@@ -465,11 +490,11 @@ PI - полнотекстовый индекс;
 
 PI - value полнотекстовый индекс для поиска по сообщениям.
 
-BI - chat_id + created_at для получения отсортированного по времени списка сообщений в чате.
+BI - chat_id + id(timeuuid) для получения отсортированного по времени списка сообщений в чате.
 
 **call_history:** 
 
-BI - created_at индекс для получения в отсортированном виде истории звонков.
+BI - id(timeuuid) индекс для получения в отсортированном виде истории звонков.
 
 **photo_binary, video_binary, file_binary, voice_binary:** 
 
