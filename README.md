@@ -329,7 +329,8 @@ session, т.к. с большей вероятностью клиент попа
 
 | Таблица      | База данных |           Primary Key           |           Index            |
 |--------------|:-----------:|:-------------------------------:|:--------------------------:|
-| session      |    Redis    |              token              |             -              |
+| session      |    Redis    |              token              |             -              |\
+| permission   |    Redis    |              token              |             -              |
 | message      |  Cassandra  | K(chat_id, month_year). C↓ (id) |             -              |
 | reaction     |  Cassandra  | K(chat_id, month_year). C↓ (id) |             -              |
 | view         |  Cassandra  |    K(message_id, month_year)    |             -              |
