@@ -379,7 +379,8 @@ Storage-attached index (обознач. S) - это индекс в Cassandra о
    AND month_year=? AND id = ?
 3. Удалить сообщение в чате по id
    UPDATE message SET value='' AND status=deleted
-   AND attachments={} WHERE id = ?
+   AND attachments={} WHERE chat_id = ? AND
+   month_year = ? AND id = ?
 4. Добавить сообщение
    INSERT * TO message(id, -//-)
 
