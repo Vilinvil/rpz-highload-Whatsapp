@@ -1,5 +1,7 @@
 **Ильинский Владислав**
 
+ Этот репозиторий является систем дизайном для мессенджера WhatsApp.
+
 [Телеграм для связи](https://t.me/Vilin0)
 
 [Методические указания](https://github.com/init/highload/blob/main/homework_architecture.md)
