@@ -1054,15 +1054,14 @@ Net:
 
 Остальные таблицы не считаем, из-за малого объема данных.
 
-Предполагая, что кол-во view и изменения статуса сообщений соизмеримо с кол-вом сообщений. Предполагая, что диски с 
-данными старее месяца мы не храним, будем выводить из эксплуатации в архивы, хранилище считаю только на год.
+Предполагая, что кол-во view и изменения статуса сообщений соизмеримо с кол-вом сообщений.
 
 |   Таблица    |                RPS                | Хранилище за 5 лет Тбайт | Net суммарный Гбит/с |
 |:------------:|:---------------------------------:|:------------------------:|:--------------------:|
-|   message    | 802 082 * 2 + 167 534 = 1 771 698 |          9 962           |         6.9          |
-|     view     |              802 082              |          4 786           |         1.3          |
-|   reaction   |              67 014               |          1 109           |         0.3          |
-| call_history |                692                |            2             |        0.0004        |
+|   message    | 802 082 * 2 + 167 534 = 1 771 698 |    9 962 * 5 = 49 810    |         6.9          |
+|     view     |              802 082              |    4 786 * 5 = 23 930    |         1.3          |
+|   reaction   |              67 014               |    1 109 * 5 = 5 545     |         0.3          |
+| call_history |                692                |        2 * 5 = 10        |        0.0004        |
 | report_abuse |                36                 |       не учитываем       |     не учитываем     |
 |     user     |                 9                 |       не учитываем       |     не учитываем     |
 
@@ -1124,38 +1123,35 @@ Redis рекомендует иметь 3 реплики [29]:
 Т.к. для всех параметров на этапе проектирования мы взяли запас в 2 раза относительно пиковых нагрузок. Считаем здесь
 по характеристикам немного превышающих требуемые. Цена с учетом гарантии 5 лет и RAID 6 для дисков Cassandra,
 резервирования диска ос RAID 1, защита по питанию. Минимальное кол-во серверов на один узел 16шт = 8 ДЦ * 2
-резервирование.
+резервирование. Цены на own bare metal взяты из [31], microsoft azure [32], DigitalOcean [33]. Для облачных решений 
+считал в калькуляторе сопоставимые по характеристикам сервера.
 
-|                   Название                    |    Хостинг     |                 Конфигурация                 | Cores | Cnt | Покупка на 5 лет 1 шт $ |        Аренда на 5 лет        |
-|:---------------------------------------------:|:--------------:|:--------------------------------------------:|:-----:|:---:|:-----------------------:|:-----------------------------:|
-|              web && mobile nginx              | own bare metal | 1 AMD EPYC 7443P/1*32Gb/NVme 2*250Gb/1*400Gb |  24   | 24  |          7 048          |                               |
-|           web && mobile api gateway           | own bare metal | 1 AMD EPYC 7443P/1*32Gb/NVme 2*250Gb/1*400Gb |  24   | 21  |          7 048          |                               |
-|                   auth.auth                   |   own Kuber    |                                              |       |     |                         |                               |
-|            auth.limitation_worker             |   own Kuber    |                                              |       |     |                         |                               |
-|                   user.user                   |   own Kuber    |                                              |       |     |                         |                               |
-|                   chat.chat                   |   own Kuber    |                                              |       |     |                         |                               |
-|               chat.attachments                |   own Kuber    |                                              |       |     |                         |                               |
-|             chat.removing_message             |   own Kuber    |                                              |       |     |                         |                               |
-| chat.message, chat.view, chat.status  workers |   own Kuber    |                                              |       |     |                         |                               |
-|             chat.reaction worker              |   own Kuber    |                                              |       |     |                         |                               |
-|             call.call, stun&&turn             |   own Kuber    |                                              |       |     |                         |                               |
-|                support.support                |   own Kuber    |                                              |       |     |                         |                               |
-|               Cassandra message               | own bare metal | 1 AMD EPYC 7343/2*32Gb/Sata3 24x7.6TB/2*1Gb  |  16   | 60  |         36 099          |                               |
-|                Cassandra view                 | own bare metal | 1 AMD EPYC 7343/2*32Gb/Sata3 24x7.6TB/2*1Gb  |  16   | 29  |         36 099          |                               |
-|              Cassandra reaction               | own bare metal | 1 AMD EPYC 7313P/2*32Gb/Sata3 12*7.6TB/2*1Gb |  16   | 16  |         19 622          |                               |
-|            Cassandra call_history             | own bare metal |  1 AMD EPYC 7313P/2*32Gb/NVMe 2*250Gb/2*1Gb  |  16   | 16  |          4 601          |                               |
-|                Cassandra other                | own bare metal |  1 AMD EPYC 7313P/2*32Gb/NVMe 2*250Gb/2*1Gb  |  16   | 16  |          4 601          |                               |
-|                 Redis session                 | own bare metal |  1 AMD Ryzen 7 7700X/4*32Gb/Nvme 1Tb/2*10Gb  |   8   | 25  |          5 500          |                               |
-|        Redis permission_and_limitation        | own bare metal |  1 AMD Ryzen 7 7700X/4*32Gb/Nvme 1Tb/2*10Gb  |   8   | 24  |          5 500          |                               |
-|                   Amazon S3                   |     amazon     |                      -                       |   -   |  -  |            -            | 210 762 * 12 * 5 = 12 645 720 |
+|            Название             |              Хостинг               |                 Конфигурация                 | Cores | Cnt | Покупка на 5 лет 1 шт $ |              Аренда на 5 лет 1 шт $               |
+|:-------------------------------:|:----------------------------------:|:--------------------------------------------:|:-----:|:---:|:-----------------------:|:-------------------------------------------------:|
+|       web && mobile nginx       |           own bare metal           | 1 AMD EPYC 7443P/1*32Gb/NVme 2*250Gb/1*400Gb |  24   | 24  |          7 048          | не рассматривался из-за высоких требований к сети |
+|    web && mobile api gateway    |           own bare metal           | 1 AMD EPYC 7443P/1*32Gb/NVme 2*250Gb/1*400Gb |  24   | 21  |          7 048          | не рассматривался из-за высоких требований к сети |
+|        chat.attachments         |             own Kuber              | 1 AMD EPYC 7713P/2*64Gb/NVme 2*250Gb/2*100Gb |  64   | 129 |         12 266          | не рассматривался из-за высоких требований к сети |
+|        call.(stun&&turn)        |   **own Kuber** OR DigitalOcean    | 1 AMD EPYC 7313P/2*16Gb/NVme 2*250Gb/2*10Gb  |  16   | 16  |          4 425          |                      10 080                       |
+|     all other microservices     |   **own Kuber** OR DigitalOcean    | 1 AMD EPYC 7713P/2*64Gb/NVme 2*250Gb/2*10Gb  |  64   | 166 |         10 860          |                      20 160                       |
+|        Cassandra message        |    **own bare metal** OR azure     | 1 AMD EPYC 7343/2*32Gb/Sata3 24x7.6TB/2*1Gb  |  16   | 298 |         36 099          |                      984 720                      |
+|         Cassandra view          |    **own bare metal** OR azure     | 1 AMD EPYC 7343/2*32Gb/Sata3 24x7.6TB/2*1Gb  |  16   | 144 |         36 099          |                      984 720                      |
+|       Cassandra reaction        |    **own bare metal** OR azure     | 1 AMD EPYC 7313P/2*32Gb/Sata3 24*7.6TB/2*1Gb |  16   | 34  |         36 099          |                      984 720                      |
+|     Cassandra call_history      | **own bare metal** OR DigitalOcean |  1 AMD EPYC 7313P/2*32Gb/NVMe 2*250Gb/2*1Gb  |  16   | 16  |          4 601          |                      32 640                       |
+|         Cassandra other         | **own bare metal** OR DigitalOcean |  1 AMD EPYC 7313P/2*32Gb/NVMe 2*250Gb/2*1Gb  |  16   | 16  |          4 601          |                      32 640                       |
+|          Redis session          | **own bare metal** OR DigitalOcean |  1 AMD Ryzen 7 7700X/4*32Gb/Nvme 1Tb/2*10Gb  |   8   | 25  |          5 500          |                      20 160                       |
+| Redis permission_and_limitation | **own bare metal** OR DigitalOcean |  1 AMD Ryzen 7 7700X/4*32Gb/Nvme 1Tb/2*10Gb  |   8   | 24  |          5 500          |                      20 160                       |
+|            Amazon S3            |               amazon               |                  41 164 TB                   |   -   |  -  |            -            |           210 762 * 12 * 5 = 12 645 720           |
 
 Для сервисов в оркестрации:
 
-| Сервис | CPU/r | CPU/l | RAM/r | RAM/l  | Cnt |
-|--------|-------| ----- | ----- | ------ | --- |
-|   auth.auth     |       ||||
-||||||
-||||||
+| Сервис                                                                                                                   | CPU/r | CPU/l | RAM/r | RAM/l |
+|--------------------------------------------------------------------------------------------------------------------------|-------|-------|-------|-------|
+| chat.attachments                                                                                                         | 16    | 32    | 16    | 64    |
+| chat.chat, chat.removing_message, call.call, call.(stun&&turn), support.support                                          | 8     | 16    | 8     | 32    | 
+| auth.auth, auth.limitation_worker, user.user, chat.message, chat.view, chat.status workers, chat.reaction worker and etc | 4     | 8     | 4     | 16    |
+
+**Суммарная стоимость системы**: 12 645 720 + 7 048 * 55 + 12 266 * 129 + 4 425 * 16 + 10 860 * 166 + 36 099 * 476 +
+4 601 * 32 + 5 500 * 49 = 34 089 090 $
 
 ## Список источников
 
@@ -1189,5 +1185,7 @@ Redis рекомендует иметь 3 реплики [29]:
 28. Сравнение AMD 7313 и 7343 https://openbenchmarking.org/vs/Processor/AMD+EPYC+7343+16-Core,AMD+EPYC+7313P+16-Core
 29. Рекомендации Redis по production серверам https://redis.io/docs/latest/operate/rs/installing-upgrading/install/plan-deployment/hardware-requirements/
 30. Бенчмарки Redis на разных процессорах https://openbenchmarking.org/test/pts/redis&eval=09fe23c16324414efce5603cb618cb1a8dbd571d#metrics
+31. Цены на сервера Broadberry https://www.broadberry.eu/rackmount-servers
+32. Цена хостинг Microsoft Azure https://azure.microsoft.com/en-gb/pricing/calculator/
 
 ** Meta - организация, деятельность которой запрещена на территории Российской Федерации
